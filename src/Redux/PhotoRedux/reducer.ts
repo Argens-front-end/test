@@ -6,7 +6,9 @@ const initialState: PhotoStore = {
   errors: [],
   loading: true,
   openModal: false,
-  activePhoto: {},
+  activePhoto: undefined,
+  page: 1,
+  albumId: undefined,
 };
 
 export default function AppReducer(
@@ -33,7 +35,13 @@ export default function AppReducer(
       return { ...state, activePhoto: action.payload, openModal: true };
 
     case AppActionTypes.CLOSE_MODAL_PHOTO:
-      return { ...state, openModal: false, activePhoto: {} };
+      return { ...state, openModal: false, activePhoto: undefined };
+
+    case AppActionTypes.ON_CHANGE_PAGE:
+      return { ...state, page: action.payload };
+
+    case AppActionTypes.ON_CHANGE_ALBUM_ID:
+      return { ...state, albumId: action.payload };
 
     default:
       return state;

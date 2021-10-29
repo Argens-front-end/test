@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
 import { deletePhoto, fetchAlbums, fetchPhotos } from "../../Helpers/api";
 import { IPhoto } from "../../Types";
+import { RootState } from "../RootReducer";
 import { AppAction, AppActionTypes } from "./types";
 
 export const fetchAlbumsAction =
@@ -40,10 +41,26 @@ export const closeModalAction = (): AppAction => {
 };
 
 export const deletePhotoAction =
-  (id: number) => async (dispatch: Dispatch<AppAction | any>) => {
+  (id: number) =>
+  async (dispatch: Dispatch<AppAction | any>, getState: () => RootState) => {
     const statusdelete = await deletePhoto(id);
     if (statusdelete) {
-      await dispatch(fetchPhotosAction(1));
+      const state = getState();
+      await dispatch(fetchPhotosAction(state.App.page, state.App.albumId));
       dispatch(closeModalAction());
     }
   };
+
+export const onChangePage = (page: number): AppAction => {
+  return {
+    type: AppActionTypes.ON_CHANGE_PAGE,
+    payload: page,
+  };
+};
+
+export const onChangeAlbumId = (albumId: string): AppAction => {
+  return {
+    type: AppActionTypes.ON_CHANGE_ALBUM_ID,
+    payload: albumId,
+  };
+};

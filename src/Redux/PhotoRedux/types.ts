@@ -6,7 +6,9 @@ export interface PhotoStore {
   errors: any[];
   loading: boolean;
   openModal: boolean;
-  activePhoto: IPhoto | {};
+  activePhoto?: IPhoto;
+  page: number;
+  albumId: string | undefined;
 }
 
 export enum AppActionTypes {
@@ -17,6 +19,8 @@ export enum AppActionTypes {
   ERROR = "ERROR",
   OPEN_MODAL_PHOTO = "OPEN_MODAL_PHOTO",
   CLOSE_MODAL_PHOTO = "CLOSE_MODAL_PHOTO",
+  ON_CHANGE_PAGE = "ON_CHANGE_PAGE",
+  ON_CHANGE_ALBUM_ID = "ON_CHANGE_ALBUM_ID",
 }
 
 export type AppAction =
@@ -26,7 +30,9 @@ export type AppAction =
   | fetchPhotosSuccessAction
   | errorAction
   | openModalAction
-  | closeModalAction;
+  | closeModalAction
+  | onChangePageAction
+  | onChangeAlbumId;
 
 interface fetchAlbumsAction {
   type: AppActionTypes.FETCH_ALBUMS;
@@ -58,4 +64,14 @@ interface openModalAction {
 
 interface closeModalAction {
   type: AppActionTypes.CLOSE_MODAL_PHOTO;
+}
+
+interface onChangePageAction {
+  type: AppActionTypes.ON_CHANGE_PAGE;
+  payload: number;
+}
+
+interface onChangeAlbumId {
+  type: AppActionTypes.ON_CHANGE_ALBUM_ID;
+  payload: string;
 }

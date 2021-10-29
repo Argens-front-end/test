@@ -1,40 +1,54 @@
 import { Pagination, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import ModalPhoto from "./Components/ModalPhoto";
 import PhotoItem from "./Components/PhotoItem";
 import SelectAlbum from "./Components/SelectAlbum";
 import { useAppDispatch, useAppSelector } from "./Hooks";
 
+import { LOADING_PHOTO_DATA, LOADING_PHOTO } from "./Constants/app";
+
 function App() {
-  const [page, setPage] = useState<number>(1);
-  const [albumId, setAlbumId] = useState<string | undefined>();
+  const { photos, page, albumId, loading } = useAppSelector(
+    (state) => state.App
+  );
 
-  const photos = useAppSelector((state) => state.App.photos);
-
-  const { fetchPhotosAction } = useAppDispatch();
+  const { fetchPhotosAction, onChangePage } = useAppDispatch();
 
   useEffect(() => {
     fetchPhotosAction(page, albumId);
   }, [page, albumId]);
 
   const changePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
-
-  const onChangeAlbum = (albumId: string) => {
-    setPage(1);
-    setAlbumId(albumId);
+    onChangePage(value);
   };
 
   return (
-    <div className="App">
-      <SelectAlbum value={albumId || ""} setAlbumId={onChangeAlbum} />
-      <div>
-        {photos.map((photo) => (
-          <PhotoItem {...photo} key={"photo" + photo.id} />
-        ))}
+    <div className="container">
+      <ModalPhoto />
+      <div className={"header"}>
+        <h1>Test Task</h1>
+        <SelectAlbum />
       </div>
-      <Typography>Page: {page}</Typography>
-      <Pagination count={10} page={page} onChange={changePage} />
+
+      <div className={"photo"}>
+        {loading
+          ? LOADING_PHOTO_DATA.map((photo, index) => (
+              <PhotoItem
+                key={"photo" + index}
+                {...LOADING_PHOTO}
+                loading={true}
+              />
+            ))
+          : photos.map((photo) => (
+              <PhotoItem {...photo} key={"photo" + photo.id} />
+            ))}
+      </div>
+
+      <div className={"pagination"}>
+        <Typography>Page: {page}</Typography>
+        <Pagination count={10} page={page} onChange={changePage} />
+      </div>
+      {/* count 10, потому что не хватает meta данных для полного числа страниц */}
     </div>
   );
 }

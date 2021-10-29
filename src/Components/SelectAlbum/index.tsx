@@ -8,17 +8,15 @@ import {
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../Hooks";
 
-interface ISelectAlbumProps {
-  value: string;
-  setAlbumId: any;
-}
+import styles from "./SelectAlbum.module.css";
 
-function SelectAlbum({ value, setAlbumId }: ISelectAlbumProps) {
-  const { fetchAlbumsAction } = useAppDispatch();
-  const { albums } = useAppSelector((state) => state.App);
+function SelectAlbum() {
+  const { fetchAlbumsAction, onChangeAlbumId, onChangePage } = useAppDispatch();
+  const { albums, albumId } = useAppSelector((state) => state.App);
 
   const onChange = (e: SelectChangeEvent) => {
-    setAlbumId(e.target.value);
+    onChangePage(1);
+    onChangeAlbumId(e.target.value);
   };
 
   useEffect(() => {
@@ -26,17 +24,17 @@ function SelectAlbum({ value, setAlbumId }: ISelectAlbumProps) {
   }, []);
 
   return (
-    <FormControl fullWidth>
+    <FormControl className={styles["select"]}>
       <InputLabel id="albumSelect">Album</InputLabel>
       <Select
         label="Album"
         labelId={"albumSelect"}
-        value={value}
+        value={albumId || ""}
         onChange={onChange}
       >
         {albums.map((item, index) => (
           <MenuItem value={item.id} key={"select" + index}>
-            {item.title}
+            {item.id} {item.title}
           </MenuItem>
         ))}
       </Select>

@@ -1,0 +1,12 @@
+.modal {
+  width: 600px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin: auto auto;
+}
+
+.img {
+  height: 600px;
+  width: 600px;
+}
